@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: hello-world
-          image: kkregistry1.azurecr.io/hello-world
+          image: kkregistry1.azurecr.io/hworld
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
