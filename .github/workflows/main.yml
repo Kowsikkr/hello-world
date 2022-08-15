@@ -1,4 +1,4 @@
-name: kowsik_ga_deploy
+name: ga_deploy
 on:
   push:
     branches: [ "main" ]
@@ -28,26 +28,3 @@ jobs:
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.repository }}:${{ github.sha }}
           docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.repository }}:${{ github.sha }}
           
-      - name: Azure login
-        id: login
-        uses: azure/login@v1.4.3
-        with:
-          creds: '{"clientId":"${{ secrets.SERVICE_PRINCIPAL }}","clientSecret":"${{ secrets.SERVICE_PRINCIPAL_PASSWORD }}","subscriptionId":"${{ secrets.SUBSCRIPTION }}","tenantId":"${{ secrets.TENANT }}"}'
-      - name: Set AKS context
-        id: set-context
-        uses: azure/aks-set-context@v3
-        with:
-          resource-group: '${{ secrets.resource_group }}' 
-          cluster-name: '${{ secrets.cluster_name }}'
-      - name: Setup kubectl
-        id: install-kubectl
-        uses: azure/setup-kubectl@v3
-      - name: Deploy to AKS
-        id: deploy-aks
-        uses: Azure/k8s-deploy@v4
-        with:
-          namespace: 'default'
-          manifests: |
-             kube-hello-world.yaml
-          images: '${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}:${{ github.sha }}'
-          pull: false
