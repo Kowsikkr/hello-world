@@ -1,9 +1,9 @@
 name: ga_deploy
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "kowsik" ]
   pull_request: 
-    branches: [ "main" ]
+    branches: [ "kowsik" ]
     paths:
       - "hello-world/**"
 jobs:
