@@ -1,9 +1,9 @@
 name: ga_deploy
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "kowsik" ]
   pull_request: 
-    branches: [ "main" ]
+    branches: [ "kowsik" ]
     paths:
       - "hello-world/**"
 jobs:
@@ -13,11 +13,6 @@ jobs:
       - name: Checkout source code 
         uses: actions/checkout@v3
         
-      - name: 'Login via Azure CLI'
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-        
       - name: 'Build and push image'
         uses: azure/docker-login@v1
         with:
@@ -26,8 +21,13 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - run: |
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.repository }}:${{ github.sha }}
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.repository }}:${{ github.sha }}
-        
+      - name: SonarCloud scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          MY_TOKEN: ${{ secrets.MY_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
       - name: Azure login
         id: login
         uses: azure/login@v1.4.3
