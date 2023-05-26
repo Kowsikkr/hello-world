@@ -21,7 +21,6 @@ jobs:
           password: ${{ secrets.REGISTRY_PASSWORD }}
       - run: |
           docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.repository }}:${{ github.sha }}
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/${{ secrets.repository }}:${{ github.sha }}
       - name: SonarCloud scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
